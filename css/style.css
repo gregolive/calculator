@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+
+body {
+    font-family: 'Exo 2', sans-serif;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+button {
+    padding: 0;
+    margin: 0;
+    height: 63.55px;
+    border: 4px solid #232528;
+    color: #232528;
+    border-radius: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
+}
+
+/* MAIN */
+
+.calculator {
+    width: 350px;
+    background-color: #D3D0CB;
+    border: 8px solid #232528;
+    border-radius: 20px;
+}
+
+/* DISPLAY */
+
+.display {
+    margin: 25px;
+    background-color: white;
+    color: #232528;
+    border: 5px solid #232528;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.topline {
+    font-size: 18px;
+    height: 20px;
+}
+
+.output {
+    font-size: 35px;
+    height: 40px;
+}
+
+/* BUTTONS */
+
+.btns {
+    display: flex;
+    margin: 25px;
+    gap: 15px;
+}
+
+/* LEFT SIDE BUTTONS */
+
+.left-btns {
+    width: 240px;
+}
+
+/* CLEAR & DELETE BUTTONS */
+
+.clr-del {
+    display: flex;
+    gap: 15px;
+}
+
+.clr, .del {
+    background-color: #E2C044;
+}
+
+.clr {
+    flex: 1;
+}
+
+.del {
+    width: 63.55px;
+    font-size: 20px;
+}
+
+/* NUMBER BUTTONS */
+
+.num-btns {
+    display: flex;
+    flex-direction: column;
+}
+
+.num-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .decimal {
+    width: 63.55px;
+    background-color: #C7CED1;
+}
+
+.zero {
+    flex: 1;
+    background-color: #C7CED1;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+.decimal[disabled] {
+    color: #232528;
+}
+
+/* OPERATOR BUTTONS */
+
+.right-btns {
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.divide, .mult, .sub, .add, .equal {
+    background-color: #6E8898;
+}
+
+/* FOOTER */
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+footer:hover {
+    animation: push 0.3s linear 1;
+}
+
+@keyframes push{
+    50%  {transform: scale(0.8);}
+}
+
+.github-logo {
+    height: 20px;
+}
+
+p {
+    margin: 0;
+}
