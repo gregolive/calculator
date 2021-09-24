@@ -2,6 +2,7 @@
 let outputNum = "";
 let operationArray = [];
 let storedOperator = "";
+let doubleOperatorCheck = "";
 
 const display = document.querySelector('.output');
 const topLine = document.querySelector('.topline');
@@ -18,8 +19,27 @@ display.innerText = 0;
 // STORE NUMBER INPUT
 numBtns.forEach(button => {
     button.addEventListener('click', e => {
-        // 1) Check if calculation is ongoing...
-        if (storedOperator != "") {
+        
+        // 1) Check if equal button was just clicked
+        if (operationArray.length == 3) {
+            // if so clear
+            display.innerText = 0;
+            topLine.innerText = "";
+            outputNum = "";
+            operationArray = [];
+            storedOperator = "";
+            decimalBtn.disabled = false;
+
+            // and add first number to output
+            outputNum += e.target.innerText;
+            display.innerText = outputNum;
+            disableDecimal(outputNum);
+
+        // 2) Check if calculation is ongoing...
+        } else if (storedOperator != "") {
+            
+            console.log(outputNum);
+
             // on first click...
             if (topLine.innerText == "") {
                 // add calculated number and stored operator to topline
@@ -34,7 +54,7 @@ numBtns.forEach(button => {
             display.innerText = outputNum;
             disableDecimal(outputNum);
 
-        // 2) Otherwise begin entering number...
+        // 3) Otherwise begin entering number...
         } else {
             // grow input number until operator is selected
             outputNum += e.target.innerText;
@@ -44,11 +64,17 @@ numBtns.forEach(button => {
     })
 });
 
-// LOG FIRST NUMBER ENTRY WHEN OPERATOR IS CLICKED
+// LOG NUMBER ENTRY WHEN OPERATOR IS CLICKED
 operatorBtns.forEach(button => {
     button.addEventListener('click', e => {
+        
         // 1) Check if array is already populated (perform calculation without = button)...
         if (operationArray.length > 0) {
+            
+            // if no new number entered don't allow to continue...
+            if (doubleOperatorCheck == 1 && topLine.innerText == "") {
+                return;
+            }
 
             // push entered number to 3rd array element
             operationArray.push(outputNum);
@@ -65,6 +91,9 @@ operatorBtns.forEach(button => {
 
             // store operator for next calculation
             storedOperator = e.target.innerText;
+            
+            // don't allow another operator to be passed until new number entered
+            doubleOperatorCheck = 1;
 
         // 2) Otherwise prepare for first calculation...
         } else {
@@ -84,17 +113,32 @@ operatorBtns.forEach(button => {
 
 // DISPLAY ANSWER WHEN EQUAL IS PUSHED
 equal.addEventListener('click', () => {
-    console.log(operationArray);
-    // push entered number to array if a number is entered
+    // reset checker
+    doubleOperatorCheck = "";
+    
+    // check if a number has been entered
     if (outputNum != "") {
+
+        // loop operation if = button is repeatedly pressed
+        if (outputNum == "") {
+            operationArray.push(outputNum);
+            display.innerText = round(operate(operationArray));
+            console.log(operationArray);
+            return;
+        }
+        
+        // push entered number to array
         operationArray.push(outputNum);
         
         // clear topline text
         topLine.innerText = '';
 
         // calculate and display answer
+        display.innerText = round(operate(operationArray));
         outputNum = round(operate(operationArray));
-        display.innerText = outputNum;
+        
+    } else {
+        return
     }
 });
 
@@ -111,15 +155,17 @@ clear.addEventListener('click', () => {
 // DELETE ENTERED VALUES ON CLICK
 del.addEventListener('click', () => {
     // delete when input has more than 1 character and not displaying answer
-    if ((display.innerText.length > 1) && (outputNum != "")) {
+    if (outputNum.length > 1) {
         display.innerText = display.innerText.slice(0, -1);
         outputNum = outputNum.slice(0, -1);
         console.log(outputNum);
-    // otherwise set input to 0
-    } else if (display.innerText.length = 1 && outputNum != "") {
+    // when 1 character set input to 0
+    } else if (outputNum.length == 1) {
         display.innerText = 0;
         outputNum = "";
-        console.log(outputNum);
+        
+    } else {
+        return;
     }
 });
 
