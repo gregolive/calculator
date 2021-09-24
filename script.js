@@ -1,10 +1,11 @@
-// DECLARE VARIBLES & CONSTANTS
+/* 
+VARIABLES AND CONSTANTS
+*/
 let outputNum = "";
 let operationArray = [];
 let storedOperator = "";
 let doubleOperatorCheck = "";
 
-// Button Constants
 const display = document.querySelector('.output');
 const topLine = document.querySelector('.topline');
 const numBtns = Array.from(document.querySelectorAll('.num'));
@@ -14,112 +15,169 @@ const equal = document.querySelector('.equal');
 const clear = document.querySelector('.clr');
 const del = document.querySelector('.del');
 
-// Keyboard Constants
-
-// DISPLAY INITIAL VALUE
-display.innerText = 0;
+display.innerText = 0; // display initial value of 0
 
 /* 
-PART 1: RUN VIA BUTTON CLICK
+WATCH FOR BUTTON CLICK INPUT
 */
 
-// STORE NUMBER INPUT
+// 1) NUMBER INPUT
 numBtns.forEach(button => {
-    button.addEventListener('click', e => {
-        
-        // 1) Check if equal button was just clicked
-        if (operationArray.length == 3) {
-            // if so clear
-            display.innerText = 0;
-            topLine.innerText = "";
-            outputNum = "";
-            operationArray = [];
-            storedOperator = "";
-            decimalBtn.disabled = false;
-
-            // and add first number to output
-            outputNum += e.target.innerText;
-            display.innerText = outputNum;
-            disableDecimal(outputNum);
-
-        // 2) Check if calculation is ongoing...
-        } else if (storedOperator != "") {
-            
-            console.log(outputNum);
-
-            // on first click...
-            if (topLine.innerText == "") {
-                // add calculated number and stored operator to topline
-                topLine.innerText = `${outputNum} ${storedOperator}`;
-            
-                // reset input counter
-                outputNum = "";
-            }
-
-            // grow input number until operator is selected
-            outputNum += e.target.innerText;
-            display.innerText = outputNum;
-            disableDecimal(outputNum);
-
-        // 3) Otherwise begin entering number...
-        } else {
-            // grow input number until operator is selected
-            outputNum += e.target.innerText;
-            display.innerText = outputNum;
-            disableDecimal(outputNum);
-        }
-    })
+    button.addEventListener('click', (e) => {
+        numberButtons(e.target.innerText);
+    });
 });
 
-// LOG NUMBER ENTRY WHEN OPERATOR IS CLICKED
+// 2) OPERATOR INPUT
 operatorBtns.forEach(button => {
-    button.addEventListener('click', e => {
-        
-        // 1) Check if array is already populated (perform calculation without = button)...
-        if (operationArray.length > 0) {
-            
-            // if no new number entered don't allow to continue...
-            if (doubleOperatorCheck == 1 && topLine.innerText == "") {
-                return;
-            }
-
-            // push entered number to 3rd array element
-            operationArray.push(outputNum);
-
-            // clear topline text
-            topLine.innerText = '';
-
-            // calculate and display answer
-            outputNum = round(operate(operationArray));
-            display.innerText = outputNum;
-
-            // set array first value to answer
-            operationArray = [outputNum, e.target.innerText];
-
-            // store operator for next calculation
-            storedOperator = e.target.innerText;
-            
-            // don't allow another operator to be passed until new number entered
-            doubleOperatorCheck = 1;
-
-        // 2) Otherwise prepare for first calculation...
-        } else {
-            // push entered number and operator to array
-            operationArray.push(outputNum);
-            operationArray.push(e.target.innerText);
-
-            // add number and operator to topline
-            topLine.innerText = `${outputNum} ${e.target.innerText}`;
-
-            // reset bottom display 
-            outputNum = "";
-            display.innerText = 0;
-        }
-    })
+    button.addEventListener('click', (e) => {
+        operatorButtons(e.target.innerText);
+    });
 });
 
-// DISPLAY ANSWER WHEN EQUAL IS PUSHED
-equal.addEventListener('click', () => {
+// 3) EQUAL INPUT
+equal.addEventListener('click', equalButton);
+
+// 4) CLEAR INPUT
+clear.addEventListener('click', clearButton);
+
+// 5) DELETE INPUT
+del.addEventListener('click', deleteButton);
+
+/* 
+WATCH FOR KEYDOWN INPUT
+*/
+
+window.addEventListener('keydown', (e) => {
+    console.log(e.key);
+
+    // 1) NUMBER INPUT
+    if (e.key >= 0 && e.key <= 9) { // 0-9 only
+        numberButtons(e.key);
+    
+    // 2) OPERATOR INPUT
+    } else if (e.key == "+" || e.key == "-" || e.key == "*" || e.key == "/") { // operator keys
+        switch (e.key) {
+            case "*":
+                operatorButtons("×");
+                break;
+            case "/":
+                operatorButtons("÷");
+                break;
+            default:
+                operatorButtons(e.key);
+                break;
+        }
+    
+    // 3) EQUAL INPUT
+    } else if (e.key == "=" || e.key == "Enter") { // works with = or enter key
+        equalButton();
+
+    // 4) CLEAR INPUT
+    } else if (e.key == "c") { // works with c key
+        clearButton();
+
+    // 5) DELETE INPUT
+    } else if (e.key == "Backspace") { // backspace key
+        deleteButton();
+    }
+});
+
+/* 
+FUNCTIONS
+*/
+
+// 1) NUMBER BUTTON FUNCTION
+function numberButtons(input) {
+    // 1) Check if equal button was just clicked
+    if (operationArray.length == 3) {
+        // if so clear
+        display.innerText = 0;
+        topLine.innerText = "";
+        outputNum = "";
+        operationArray = [];
+        storedOperator = "";
+        decimalBtn.disabled = false;
+
+        // and add first number to output
+        outputNum += input;
+        display.innerText = outputNum;
+        disableDecimal(outputNum);
+
+    // 2) Check if calculation is ongoing...
+    } else if (storedOperator != "") {
+        
+        console.log(outputNum);
+
+        // on first click...
+        if (topLine.innerText == "") {
+            // add calculated number and stored operator to topline
+            topLine.innerText = `${outputNum} ${storedOperator}`;
+        
+            // reset input counter
+            outputNum = "";
+        }
+
+        // grow input number until operator is selected
+        outputNum += input;
+        display.innerText = outputNum;
+        disableDecimal(outputNum);
+
+    // 3) Otherwise begin entering number...
+    } else {
+        // grow input number until operator is selected
+        outputNum += input;
+        display.innerText = outputNum;
+        disableDecimal(outputNum);
+    }
+}
+
+// 2) OPERATOR BUTTON FUNCTION
+function operatorButtons(input) {
+    // 1) Check if array is already populated (perform calculation without = button)...
+    if (operationArray.length > 0) {
+            
+        // if no new number entered don't allow to continue...
+        if (doubleOperatorCheck == 1 && topLine.innerText == "") {
+            return;
+        }
+
+        // push entered number to 3rd array element
+        operationArray.push(outputNum);
+
+        // clear topline text
+        topLine.innerText = '';
+
+        // calculate and display answer
+        outputNum = round(operate(operationArray));
+        display.innerText = outputNum;
+
+        // set array first value to answer
+        operationArray = [outputNum, input];
+
+        // store operator for next calculation
+        storedOperator = input;
+        
+        // don't allow another operator to be passed until new number entered
+        doubleOperatorCheck = 1;
+
+    // 2) Otherwise prepare for first calculation...
+    } else {
+        // push entered number and operator to array
+        operationArray.push(outputNum);
+        operationArray.push(input);
+
+        // add number and operator to topline
+        topLine.innerText = `${outputNum} ${input}`;
+
+        // reset bottom display 
+        outputNum = "";
+        display.innerText = 0;
+    }
+}
+
+// 3) EQUAL BUTTON FUNCTIONS
+function equalButton() {
     // reset checker
     doubleOperatorCheck = "";
     
@@ -154,20 +212,20 @@ equal.addEventListener('click', () => {
     } else {
         return;
     }
-});
+}
 
-// CLEAR WHEN BUTTON IS CLICKED
-clear.addEventListener('click', () => {
+// 4) CLEAR BUTTON FUNCTION
+function clearButton() {
     display.innerText = 0;
     topLine.innerText = "";
     outputNum = "";
     operationArray = [];
     storedOperator = "";
     decimalBtn.disabled = false;
-});
+}
 
-// DELETE ENTERED VALUES ON CLICK
-del.addEventListener('click', () => {
+// 5) DELETE BUTTON FUNCTION
+function deleteButton() {
     // delete when input has more than 1 character and not displaying answer
     if (outputNum.length > 1) {
         display.innerText = display.innerText.slice(0, -1);
@@ -181,17 +239,7 @@ del.addEventListener('click', () => {
     } else {
         return;
     }
-});
-
-/* 
-PART 2: RUN VIA KEYBOARD PRESS
-*/
-
-
-
-/* 
-PART 3: FUNCTIONS
-*/
+}
 
 // DISABLE BUTTON FUNCTION
 function disableDecimal(text) {
@@ -229,12 +277,12 @@ function operate ([num1, operator, num2]) {
             return multiply(num1, num2);
         case '÷':
             if (num2 == 0) {
-                return 'Does not compute'
+                return 'Does not compute';
             } else {
                 return divide(num1, num2);
             }
         default:
-            return 'Does not compute'
+            return 'Does not compute';
     }
 }
 

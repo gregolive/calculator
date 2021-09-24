@@ -144,20 +144,22 @@ button:hover {
 
 /* FOOTER */
 
-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-}
-
 footer:hover {
     animation: push 0.3s linear 1;
 }
 
 @keyframes push{
     50%  {transform: scale(0.8);}
+}
+
+a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 
 .github-logo {
