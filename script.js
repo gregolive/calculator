@@ -4,6 +4,7 @@ let operationArray = [];
 let storedOperator = "";
 let doubleOperatorCheck = "";
 
+// Button Constants
 const display = document.querySelector('.output');
 const topLine = document.querySelector('.topline');
 const numBtns = Array.from(document.querySelectorAll('.num'));
@@ -13,8 +14,14 @@ const equal = document.querySelector('.equal');
 const clear = document.querySelector('.clr');
 const del = document.querySelector('.del');
 
+// Keyboard Constants
+
 // DISPLAY INITIAL VALUE
 display.innerText = 0;
+
+/* 
+PART 1: RUN VIA BUTTON CLICK
+*/
 
 // STORE NUMBER INPUT
 numBtns.forEach(button => {
@@ -120,8 +127,8 @@ equal.addEventListener('click', () => {
     if (outputNum != "") {
 
         // loop operation if = button is repeatedly pressed
-        if (outputNum == "") {
-            operationArray.push(outputNum);
+        if (operationArray.length == 3) {
+            operationArray[0] = display.innerText;
             display.innerText = round(operate(operationArray));
             console.log(operationArray);
             return;
@@ -133,12 +140,19 @@ equal.addEventListener('click', () => {
         // clear topline text
         topLine.innerText = '';
 
+        console.log(round(operate(operationArray)));
+
         // calculate and display answer
-        display.innerText = round(operate(operationArray));
         outputNum = round(operate(operationArray));
-        
+        // if not NaN (div by 0 err msg) return the message
+        if (isNaN(outputNum)) { 
+            display.innerText = "error.gif";
+        } else {
+            display.innerText = round(operate(operationArray));
+        }
+
     } else {
-        return
+        return;
     }
 });
 
@@ -168,6 +182,16 @@ del.addEventListener('click', () => {
         return;
     }
 });
+
+/* 
+PART 2: RUN VIA KEYBOARD PRESS
+*/
+
+
+
+/* 
+PART 3: FUNCTIONS
+*/
 
 // DISABLE BUTTON FUNCTION
 function disableDecimal(text) {
@@ -205,9 +229,10 @@ function operate ([num1, operator, num2]) {
             return multiply(num1, num2);
         case '÷':
             if (num2 == 0) {
-                return 'Dividing by 0? :('
+                return 'Does not compute'
+            } else {
+                return divide(num1, num2);
             }
-            return divide(num1, num2);
         default:
             return 'Does not compute'
     }
