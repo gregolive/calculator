@@ -15,7 +15,7 @@ const equal = document.querySelector('.equal');
 const clear = document.querySelector('.clr');
 const del = document.querySelector('.del');
 
-display.innerText = 0; // display initial value of 0
+display.textContent = 0; // display initial value of 0
 
 /* 
 WATCH FOR BUTTON CLICK INPUT
@@ -24,14 +24,14 @@ WATCH FOR BUTTON CLICK INPUT
 // 1) NUMBER INPUT
 numBtns.forEach(button => {
     button.addEventListener('click', (e) => {
-        numberButtons(e.target.innerText);
+        numberButtons(e.target.textContent);
     });
 });
 
 // 2) OPERATOR INPUT
 operatorBtns.forEach(button => {
     button.addEventListener('click', (e) => {
-        operatorButtons(e.target.innerText);
+        operatorButtons(e.target.textContent);
     });
 });
 
@@ -92,8 +92,8 @@ function numberButtons(input) {
     // 1) Check if equal button was just clicked
     if (operationArray.length == 3) {
         // if so clear
-        display.innerText = 0;
-        topLine.innerText = "";
+        display.textContent = 0;
+        topLine.textContent = "";
         outputNum = "";
         operationArray = [];
         storedOperator = "";
@@ -101,7 +101,7 @@ function numberButtons(input) {
 
         // and add first number to output
         outputNum += input;
-        display.innerText = outputNum;
+        display.textContent = outputNum;
         disableDecimal(outputNum);
 
     // 2) Check if calculation is ongoing...
@@ -110,9 +110,9 @@ function numberButtons(input) {
         console.log(outputNum);
 
         // on first click...
-        if (topLine.innerText == "") {
+        if (topLine.textContent == "") {
             // add calculated number and stored operator to topline
-            topLine.innerText = `${outputNum} ${storedOperator}`;
+            topLine.textContent = `${outputNum} ${storedOperator}`;
         
             // reset input counter
             outputNum = "";
@@ -120,14 +120,14 @@ function numberButtons(input) {
 
         // grow input number until operator is selected
         outputNum += input;
-        display.innerText = outputNum;
+        display.textContent = outputNum;
         disableDecimal(outputNum);
 
     // 3) Otherwise begin entering number...
     } else {
         // grow input number until operator is selected
         outputNum += input;
-        display.innerText = outputNum;
+        display.textContent = outputNum;
         disableDecimal(outputNum);
     }
 }
@@ -138,7 +138,7 @@ function operatorButtons(input) {
     if (operationArray.length > 0) {
             
         // if no new number entered don't allow to continue...
-        if (doubleOperatorCheck == 1 && topLine.innerText == "") {
+        if (doubleOperatorCheck == 1 && topLine.textContent == "") {
             return;
         }
 
@@ -146,11 +146,11 @@ function operatorButtons(input) {
         operationArray.push(outputNum);
 
         // clear topline text
-        topLine.innerText = '';
+        topLine.textContent = '';
 
         // calculate and display answer
         outputNum = round(operate(operationArray));
-        display.innerText = outputNum;
+        display.textContent = outputNum;
 
         // set array first value to answer
         operationArray = [outputNum, input];
@@ -168,11 +168,11 @@ function operatorButtons(input) {
         operationArray.push(input);
 
         // add number and operator to topline
-        topLine.innerText = `${outputNum} ${input}`;
+        topLine.textContent = `${outputNum} ${input}`;
 
         // reset bottom display 
         outputNum = "";
-        display.innerText = 0;
+        display.textContent = 0;
     }
 }
 
@@ -186,8 +186,8 @@ function equalButton() {
 
         // loop operation if = button is repeatedly pressed
         if (operationArray.length == 3) {
-            operationArray[0] = display.innerText;
-            display.innerText = round(operate(operationArray));
+            operationArray[0] = display.textContent;
+            display.textContent = round(operate(operationArray));
             console.log(operationArray);
             return;
         }
@@ -196,7 +196,7 @@ function equalButton() {
         operationArray.push(outputNum);
         
         // clear topline text
-        topLine.innerText = '';
+        topLine.textContent = '';
 
         console.log(round(operate(operationArray)));
 
@@ -204,9 +204,9 @@ function equalButton() {
         outputNum = round(operate(operationArray));
         // if not NaN (div by 0 err msg) return the message
         if (isNaN(outputNum)) { 
-            display.innerText = "error.gif";
+            display.textContent = "error.gif";
         } else {
-            display.innerText = round(operate(operationArray));
+            display.textContent = round(operate(operationArray));
         }
 
     } else {
@@ -216,8 +216,8 @@ function equalButton() {
 
 // 4) CLEAR BUTTON FUNCTION
 function clearButton() {
-    display.innerText = 0;
-    topLine.innerText = "";
+    display.textContent = 0;
+    topLine.textContent = "";
     outputNum = "";
     operationArray = [];
     storedOperator = "";
@@ -228,12 +228,12 @@ function clearButton() {
 function deleteButton() {
     // delete when input has more than 1 character and not displaying answer
     if (outputNum.length > 1) {
-        display.innerText = display.innerText.slice(0, -1);
+        display.textContent = display.textContent.slice(0, -1);
         outputNum = outputNum.slice(0, -1);
         console.log(outputNum);
     // when 1 character set input to 0
     } else if (outputNum.length == 1) {
-        display.innerText = 0;
+        display.textContent = 0;
         outputNum = "";
         
     } else {
